@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 
 
+# Returns the current stock/fund price of 'ticker', None if no price found.
 def get_price(ticker):
     url = f"https://www.marketwatch.com/investing/stock/{ticker}"
     r = requests.get(url)
