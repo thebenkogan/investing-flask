@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(128), unique=True)
     password = db.Column(db.String(150))
     groups = db.relationship("Group", secondary=user_group_identifier)
-    investments = db.relationship("Investment")
+    investments = db.relationship("Investment", backref="user")
 
 
 class Group(db.Model):
@@ -25,7 +25,7 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     users = db.relationship("User", secondary=user_group_identifier)
-    investments = db.relationship("Investment")
+    investments = db.relationship("Investment", backref="group")
 
 
 class Investment(db.Model):

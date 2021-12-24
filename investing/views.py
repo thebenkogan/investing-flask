@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note
+from sqlalchemy.sql.functions import user
+from .models import Group, Investment
 from . import db
-import json
 
 views = Blueprint("views", __name__)
 
@@ -11,27 +11,40 @@ views = Blueprint("views", __name__)
 @login_required
 def home():
     if request.method == "POST":
-        note = request.form.get("note")
+        group = request.form.get("group")
 
-        if len(note) < 1:
-            flash("Note is too short!", category="error")
+        if len(group) < 3:
+            flash("Group name is too short!", category="error")
         else:
-            new_note = Note(data=note, user_id=current_user.id)
-            db.session.add(new_note)
+            new_group = Group(name=group)
+            new_group.users.append(current_user)
+            db.session.add(new_group)
             db.session.commit()
-            flash("Note added!", category="success")
+            flash("Group added!", category="success")
 
     return render_template("home.html", user=current_user)
 
 
-@views.route("/delete-note", methods=["POST"])
-def delete_note():
-    note = json.loads(request.data)
-    noteId = note["noteId"]
-    note = Note.query.get(noteId)
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
-            db.session.commit()
+@views.route("/group/<int:group_id>", methods=["GET", "POST"])
+def group(group_id):
+    if request.method == "POST":
+        ticker = request.form.get("ticker")
+        amount = request.form.get("amount")
+        shares = request.form.get("shares")
 
-    return jsonify({})
+        if len(ticker) > 5:
+            flash("Symbol name is too long!", category="error")
+        else:
+            new_investment = Investment(
+                user_id=current_user.id,
+                group_id=group_id,
+                ticker=ticker,
+                amount=amount,
+                shares=shares,
+            )
+            db.session.add(new_investment)
+            db.session.commit()
+            flash("Investment added!", category="success")
+
+    group = Group.query.get_or_404(group_id)
+    return render_template("group.html", user=current_user, group=group)

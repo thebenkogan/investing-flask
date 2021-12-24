@@ -1,21 +1,22 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<h1 align="center">Notes</h1>
-<ul class="list-group list-group-flush" id="notes">
-  {% for note in user.notes %}
+<h1 align="center">Groups</h1>
+<ul class="list-group list-group-flush" id="groups">
+  {% for group in user.groups %}
   <li class="list-group-item">
-    {{ note.data }}
-    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <a
+      class="btn btn-secondary btn-sm mt-1 mb-1"
+      href="{{ url_for('views.group', group_id=group.id) }}"
+      >{{ group.name }}</a
+    >
   </li>
   {% endfor %}
 </ul>
 <form method="POST">
-  <textarea name="note" id="note" class="form-control"></textarea>
+  <textarea name="group" id="group" class="form-control"></textarea>
   <br />
   <div align="center">
-    <button type="submit" class="btn btn-primary">Add Note</button>
+    <button type="submit" class="btn btn-primary">Add Group</button>
   </div>
 </form>
 {% endblock %}
