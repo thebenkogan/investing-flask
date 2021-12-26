@@ -1,5 +1,7 @@
-{% extends "base.html" %} {% block title %}group.name{% endblock %} {% block
-content %} {% for investment in group.investments %}
+{% extends "base.html" %} {% block title %}Group{% endblock %} {% block content
+%}
+<h1 align="center">{{ group.name }}</h1>
+{% for investment in group.investments %}
 <article class="media content-section">
   <div class="media-body">
     <div class="article-metadata">
@@ -7,71 +9,20 @@ content %} {% for investment in group.investments %}
       <small class="text-muted"
         >{{ investment.date.strftime('%Y-%m-%d') }}</small
       >
-      {% if investment.user == current_user %}
-      <div>
-        <a
-          class="btn btn-secondary btn-sm mt-1 mb-1"
-          href="{{ url_for('update_post', investment_id=investment.id) }}"
-          >Update</a
-        >
-        <button
-          type="button"
-          class="btn btn-danger btn-sm m-1"
-          data-toggle="modal"
-          data-target="#deleteModal"
-        >
-          Delete
-        </button>
-      </div>
-      {% endif %}
     </div>
-    <h2 class="article-title">{{ investment.ticker }}</h2>
-    <p class="article-content">{{ investment.amount }}</p>
+    <h2 class="article-title">{{ investment.amount }}</h2>
+    <p class="article-content">{{ investment.ticker }}</p>
   </div>
 </article>
-<!-- Modal -->
-<div
-  class="modal fade"
-  id="deleteModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="deleteModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          Close
-        </button>
-        <form
-          action="{{ url_for('delete_post', investment_id=investment.id) }}"
-          method="POST"
-        >
-          <input class="btn btn-danger" type="submit" value="Delete" />
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 {% endfor %}
+<h1 align="center">New Investment</h1>
 <form method="POST">
   <div class="form-group">
     <label for="ticker">Symbol</label>
     <input
       type="text"
       class="form-control"
+      name="ticker"
       id="ticker"
       placeholder="Enter ticker"
     />
@@ -83,6 +34,7 @@ content %} {% for investment in group.investments %}
       step="0.01"
       min="0"
       class="form-control"
+      name="amount"
       id="amount"
       placeholder="Enter Amount Invested"
     />
@@ -94,6 +46,7 @@ content %} {% for investment in group.investments %}
       step="0.01"
       min="0"
       class="form-control"
+      name="shares"
       id="shares"
       placeholder="Enter Number of Shares"
     />
@@ -103,5 +56,4 @@ content %} {% for investment in group.investments %}
     <button type="submit" class="btn btn-primary">Add Investment</button>
   </div>
 </form>
-
 {% endblock %}

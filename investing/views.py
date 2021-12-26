@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
+from requests.api import get
 from sqlalchemy.sql.functions import user
 from .models import Group, Investment
+from .price import get_price, GroupStats
 from . import db
 
 views = Blueprint("views", __name__)
@@ -32,7 +34,11 @@ def group(group_id):
         amount = request.form.get("amount")
         shares = request.form.get("shares")
 
-        if len(ticker) > 5:
+        ticker_price = get_price(ticker)
+
+        if ticker_price == None:
+            flash("Symbol does not exist!", category="error")
+        elif len(ticker) > 5:
             flash("Symbol name is too long!", category="error")
         else:
             new_investment = Investment(
@@ -47,4 +53,5 @@ def group(group_id):
             flash("Investment added!", category="success")
 
     group = Group.query.get_or_404(group_id)
+    stats = GroupStats(group)
     return render_template("group.html", user=current_user, group=group)
