@@ -44,7 +44,7 @@ def group(group_id):
             new_investment = Investment(
                 user_id=current_user.id,
                 group_id=group_id,
-                ticker=ticker,
+                ticker=ticker.upper(),
                 amount=amount,
                 shares=shares,
             )
@@ -54,4 +54,4 @@ def group(group_id):
 
     group = Group.query.get_or_404(group_id)
     stats = GroupStats(group)
-    return render_template("group.html", user=current_user, group=group)
+    return render_template("group.html", user=current_user, group=group, stats=stats)

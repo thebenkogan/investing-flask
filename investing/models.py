@@ -34,5 +34,5 @@ class Investment(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey("groups.id"))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     ticker = db.Column(db.String(5))
-    amount = db.Column(db.Float)
-    shares = db.Column(db.Float)
+    amount = db.Column(db.Numeric(20, 2))
+    shares = db.Column(db.Numeric(20, 2))
