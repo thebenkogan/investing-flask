@@ -1,6 +1,6 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block header %}
 <h1 align="center">Groups</h1>
+{% endblock %} {% block content %}
 <ul class="list-group list-group-flush" id="groups">
   {% for group in user.groups %}
   <li class="list-group-item">

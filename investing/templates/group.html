@@ -1,6 +1,25 @@
-{% extends "base.html" %} {% block title %}Group{% endblock %} {% block content
+{% extends "base.html" %} {% block title %}Group{% endblock %} {% block header
 %}
 <h1 align="center">{{ group.name }}</h1>
+{% endblock %} {% block content%}
+
+<div class="container-fluid p-3">
+  {% for user in group.users %} {% set user_share = stats.user_shares[user.id]
+  %} {% set share = (user_share / stats.balance) * 100 %}
+  <div class="progress" style="height: 20px">
+    <div
+      class="progress-bar"
+      role="progressbar"
+      style="width: {{ share }}%"
+      aria-valuenow="{{ share }}"
+      aria-valuemin="{{ share }}"
+      aria-valuemax="100"
+    >
+      {{user.first_name}} {{ share }}%
+    </div>
+  </div>
+  {% endfor %}
+</div>
 
 <div class="container-fluid p-3">
   <form method="POST">

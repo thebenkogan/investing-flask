@@ -58,6 +58,10 @@
     </div>
     {% endif %} {% endfor %} {% endif %} {% endwith %}
 
+    <div class="container-fluid p-3 bg-secondary text-white">
+      {% block header %} {% endblock %}
+    </div>
+
     <div class="container">{% block content %} {% endblock %}</div>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
