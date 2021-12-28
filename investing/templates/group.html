@@ -3,22 +3,41 @@
 <h1 align="center">{{ group.name }}</h1>
 {% endblock %} {% block content%}
 
+<h1 class="display-1" align="center">{{'${:,.2f}'.format(stats.balance)}}</h1>
+
 <div class="container-fluid p-3">
   {% for user in group.users %} {% set user_share = stats.user_shares[user.id]
   %} {% set share = (user_share / stats.balance) * 100 %}
-  <div class="progress" style="height: 20px">
+  <div class="progress" style="height: 30px">
     <div
       class="progress-bar"
       role="progressbar"
-      style="width: {{ share }}%"
+      style="width: {{ share }}%; font-size: 20px"
       aria-valuenow="{{ share }}"
       aria-valuemin="{{ share }}"
       aria-valuemax="100"
     >
-      {{user.first_name}} {{ share }}%
+      {{user.first_name}} - {{ '${:,.2f}'.format(user_share) }}
     </div>
   </div>
   {% endfor %}
+</div>
+
+<div class="container">
+  <div class="row justify-content-center">
+    {% for ticker, price in stats.stocks.items() %}
+    <div class="col-2">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" align="center">{{ ticker }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted" align="center">
+            {{ '${:,.2f}'.format(price) }}
+          </h6>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 
 <div class="container-fluid p-3">
@@ -80,9 +99,9 @@
         <th scope="row">{{ loop.index }}</th>
         <td>{{ investment.user.first_name }}</td>
         <td>{{ investment.ticker }}</td>
-        <td>{{ investment.amount }}</td>
-        <td>{{ investment.shares }}</td>
-        <td>{{ investment.date.strftime('%Y-%m-%d') }}</td>
+        <td>{{ '${:,.2f}'.format(investment.amount) }}</td>
+        <td>{{ investment.shares|float }}</td>
+        <td>{{ investment.date.strftime('%b %d, %Y') }}</td>
       </tr>
       {% endfor %}
     </tbody>
