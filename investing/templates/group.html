@@ -6,8 +6,9 @@
 <h1 class="display-1" align="center">{{'${:,.2f}'.format(stats.balance)}}</h1>
 
 <div class="container-fluid p-3">
-  {% for user in group.users %} {% set user_share = stats.user_shares[user.id]
-  %} {% set share = (user_share / stats.balance) * 100 %}
+  {% if group.investments|length > 0 %} {% for user in group.users %} {% set
+  user_share = stats.user_shares[user.id] %} {% set share = (user_share /
+  stats.balance) * 100 %}
   <div class="progress" style="height: 30px">
     <div
       class="progress-bar"
@@ -20,7 +21,9 @@
       {{user.first_name}} - {{ '${:,.2f}'.format(user_share) }}
     </div>
   </div>
-  {% endfor %}
+  {% endfor %} {% else %}
+  <h2 align="center">No Shares</h2>
+  {% endif %}
 </div>
 
 <div class="container">
@@ -106,6 +109,9 @@
       {% endfor %}
     </tbody>
   </table>
+  {% if group.investments|length == 0 %}
+  <h2 align="center">No investments</h2>
+  {% endif %}
 </div>
 
 {% endblock %}

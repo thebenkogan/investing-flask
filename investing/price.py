@@ -58,10 +58,11 @@ class GroupStats:
             self.user_invests[investment.user_id] = stats
 
         # Get user balances and total group balance
-        for user in group.users:
-            user_balance = 0
-            for ticker, (shares, amount) in self.user_invests[user.id].items():
-                stock_balance = shares * self.stocks[ticker]
-                user_balance += stock_balance
-                self.balance += stock_balance
-            self.user_shares[user.id] = user_balance
+        if len(group.investments) > 0:
+            for user in group.users:
+                user_balance = 0
+                for ticker, (shares, amount) in self.user_invests[user.id].items():
+                    stock_balance = shares * self.stocks[ticker]
+                    user_balance += stock_balance
+                    self.balance += stock_balance
+                self.user_shares[user.id] = user_balance
