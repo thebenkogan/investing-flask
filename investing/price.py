@@ -34,7 +34,7 @@ class GroupStats:
         )
 
         # Maps user to stock investments stats
-        # {user id, {stock, (shares, amount invested)}}
+        # {user id, {stock, (amount invested, shares)}}
         self.user_invests = {}
 
         # Maps user to share of group balance {user id, share of balance}
@@ -62,7 +62,7 @@ class GroupStats:
             for user in group.users:
                 user_balance = 0
                 try:
-                    for ticker, (shares, amount) in self.user_invests[user.id].items():
+                    for ticker, (amount, shares) in self.user_invests[user.id].items():
                         stock_balance = shares * self.stocks[ticker]
                         user_balance += stock_balance
                         self.balance += stock_balance
