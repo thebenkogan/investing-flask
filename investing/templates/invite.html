@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block header %}
+<h1 align="center">Invites</h1>
+{% endblock %} {% block content %}
+<ul class="list-group list-group-flush" id="groups">
+  {% for invite in user.invites %}
+  <li class="list-group-item">
+    <div class="row justify-content-center">
+      <div class="col-auto"><p class="h6">{{ invite.group.name }}</p></div>
+      <div class="col-auto">
+        <p class="h6">{{ invite.date.strftime('%b %d, %Y') }}</p>
+      </div>
+      <div class="col-auto">
+        <form
+          action="{{ url_for('views.handle_invite', invite_id=invite.id, accept=1) }}"
+          method="POST"
+        >
+          <input class="btn btn-success" type="submit" value="Accept" />
+        </form>
+      </div>
+      <div class="col-auto">
+        <form
+          action="{{ url_for('views.handle_invite', invite_id=invite.id, accept=0) }}"
+          method="POST"
+        >
+          <input class="btn btn-danger" type="submit" value="Reject" />
+        </form>
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

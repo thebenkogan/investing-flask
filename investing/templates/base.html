@@ -31,6 +31,7 @@
         <div class="navbar-nav">
           {% if user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="invite" href="/invites">Invites</a>
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% else %}
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
@@ -39,6 +40,10 @@
         </div>
       </div>
     </nav>
+
+    <div class="container-fluid p-3 bg-secondary text-white">
+      {% block header %} {% endblock %}
+    </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %} {% if category ==
@@ -57,10 +62,6 @@
       </button>
     </div>
     {% endif %} {% endfor %} {% endif %} {% endwith %}
-
-    <div class="container-fluid p-3 bg-secondary text-white">
-      {% block header %} {% endblock %}
-    </div>
 
     <div class="container">{% block content %} {% endblock %}</div>
     <script

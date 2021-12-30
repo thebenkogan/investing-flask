@@ -61,8 +61,11 @@ class GroupStats:
         if len(group.investments) > 0:
             for user in group.users:
                 user_balance = 0
-                for ticker, (shares, amount) in self.user_invests[user.id].items():
-                    stock_balance = shares * self.stocks[ticker]
-                    user_balance += stock_balance
-                    self.balance += stock_balance
-                self.user_shares[user.id] = user_balance
+                try:
+                    for ticker, (shares, amount) in self.user_invests[user.id].items():
+                        stock_balance = shares * self.stocks[ticker]
+                        user_balance += stock_balance
+                        self.balance += stock_balance
+                    self.user_shares[user.id] = user_balance
+                except Exception:  # User does not have investments
+                    continue

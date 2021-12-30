@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     groups = db.relationship("Group", secondary=user_group_identifier, backref="users")
     investments = db.relationship("Investment", backref="user")
+    invites = db.relationship("Invite", backref="user")
 
 
 class Group(db.Model):
@@ -25,6 +26,7 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     investments = db.relationship("Investment", backref="group")
+    invites = db.relationship("Invite", backref="group")
 
 
 class Investment(db.Model):
@@ -36,3 +38,11 @@ class Investment(db.Model):
     ticker = db.Column(db.String(5))
     amount = db.Column(db.Numeric(20, 2))
     shares = db.Column(db.Numeric(20, 2))
+
+
+class Invite(db.Model):
+    __tablename__ = "invites"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    group_id = db.Column(db.Integer, db.ForeignKey("groups.id"))
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
