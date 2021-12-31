@@ -71,13 +71,13 @@
   {% if group.investments|length > 0 %} {% for user in group.users %} {% set
   user_share = get_user_share(user.id) %} {% set share = (user_share /
   stats.balance) * 100 %} {% if share > 0 %}
-  <div class="progress" style="height: 30px">
+  <div class="progress mb-2" style="height: 30px">
     <div
-      class="progress-bar text-left pl-1"
+      class="progress-bar text-left pl-1 bg-{{ loop.cycle('success', 'info', 'warning', 'danger') }}"
       role="progressbar"
       style="width: {{ share }}%; font-size: 20px"
       aria-valuenow="{{ share }}"
-      aria-valuemin="{{ share }}"
+      aria-valuemin="0"
       aria-valuemax="100"
     >
       {{user.first_name}} - {{ '${:,.2f}'.format(user_share) }}
