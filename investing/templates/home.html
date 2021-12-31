@@ -2,21 +2,49 @@
 <h1 align="center">Groups</h1>
 {% endblock %} {% block content %}
 <ul class="list-group list-group-flush" id="groups">
-  {% for group in user.groups %}
+  {% if user.groups|length > 0 %} {% for group in user.groups %}
   <li class="list-group-item">
-    <a
-      class="btn btn-secondary btn-sm mt-1 mb-1"
-      href="{{ url_for('views.group', group_id=group.id) }}"
-      >{{ group.name }}</a
-    >
+    <div class="row justify-content-center">
+      <div class="col-4 align-self-center">
+        <p class="h6">{{ group.name }}</p>
+      </div>
+      <div class="col-auto">
+        <form
+          action="{{ url_for('views.group', group_id=group.id) }}"
+          method="POST"
+        >
+          <input class="btn btn-success" type="submit" value="View" />
+        </form>
+      </div>
+      <div class="col-auto">
+        <form
+          action="{{ url_for('views.leave_group', group_id=group.id) }}"
+          method="POST"
+        >
+          <input class="btn btn-danger" type="submit" value="Leave" />
+        </form>
+      </div>
+    </div>
   </li>
-  {% endfor %}
+  {% endfor %} {% else %}
+  <h2 align="center">No Groups</h2>
+  {% endif %}
 </ul>
+
 <form method="POST">
-  <textarea name="group" id="group" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary">Add Group</button>
+  <div class="row justify-content-center pt-3">
+    <div class="col-3">
+      <input
+        type="text"
+        class="form-control text-center"
+        name="group"
+        id="group"
+        placeholder="Group Name"
+      />
+    </div>
+    <div class="col-auto offset-md-1">
+      <button type="submit" class="btn btn-primary">Create Group</button>
+    </div>
   </div>
 </form>
 {% endblock %}

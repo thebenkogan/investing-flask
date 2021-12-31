@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from requests.api import get
 from sqlalchemy import desc
 from .models import User, Group, Investment, Invite
 from .price import get_price, GroupStats
@@ -55,6 +54,16 @@ def handle_invite(invite_id, accept):
         flash("Invite rejected!", "success")
     redirect_url = "home" if accept else "invite"
     return redirect(url_for(f"views.{redirect_url}"))
+
+
+@views.route("/leave/<int:group_id>", methods=["POST"])
+@login_required
+def leave_group(group_id):
+    group = Group.query.get_or_404(group_id)
+    group.users.remove(current_user)
+    db.session.commit()
+    flash(f"Leaved {group.name}!", category="success")
+    return redirect(url_for(f"views.home"))
 
 
 @views.route("/group/<int:group_id>", methods=["GET", "POST"])
