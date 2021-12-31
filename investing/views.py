@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
 from requests.api import get
-from sqlalchemy.sql.functions import user
+from sqlalchemy import desc
 from .models import User, Group, Investment, Invite
 from .price import get_price, GroupStats
 from . import db
@@ -31,7 +31,12 @@ def home():
 @views.route("/invites")
 @login_required
 def invite():
-    return render_template("invite.html", user=current_user)
+    invites = (
+        Invite.query.filter_by(user_id=current_user.id)
+        .order_by(desc(Invite.date))
+        .all()
+    )
+    return render_template("invite.html", user=current_user, invites=invites)
 
 
 @views.route("/invites/<int:invite_id>/<int:accept>", methods=["POST"])
@@ -48,7 +53,8 @@ def handle_invite(invite_id, accept):
         db.session.delete(invite)
         db.session.commit()
         flash("Invite rejected!", "success")
-    return redirect(url_for("views.home"))
+    redirect_url = "home" if accept else "invite"
+    return redirect(url_for(f"views.{redirect_url}"))
 
 
 @views.route("/group/<int:group_id>", methods=["GET", "POST"])
@@ -85,10 +91,15 @@ def group(group_id):
             if user == current_user:
                 flash("Cannot invite yourself.", category="error")
             else:
-                new_invite = Invite(user_id=user.id, group_id=group_id)
-                db.session.add(new_invite)
-                db.session.commit()
-                flash(f"Invited {user.first_name}!", category="success")
+                if group_id in [group.id for group in user.groups]:  # Already in group
+                    flash(
+                        f"{user.first_name} is already in this group.", category="error"
+                    )
+                else:
+                    new_invite = Invite(user_id=user.id, group_id=group_id)
+                    db.session.add(new_invite)
+                    db.session.commit()
+                    flash(f"Invited {user.first_name}!", category="success")
         else:
             flash("Email does not exist.", category="error")
 

@@ -2,11 +2,13 @@
 <h1 align="center">Invites</h1>
 {% endblock %} {% block content %}
 <ul class="list-group list-group-flush" id="groups">
-  {% for invite in user.invites %}
+  {% if invites|length > 0 %} {% for invite in invites %}
   <li class="list-group-item">
     <div class="row justify-content-center">
-      <div class="col-auto"><p class="h6">{{ invite.group.name }}</p></div>
-      <div class="col-auto">
+      <div class="col-4 align-self-center">
+        <p class="h6">{{ invite.group.name }}</p>
+      </div>
+      <div class="col-4 align-self-center">
         <p class="h6">{{ invite.date.strftime('%b %d, %Y') }}</p>
       </div>
       <div class="col-auto">
@@ -27,6 +29,8 @@
       </div>
     </div>
   </li>
-  {% endfor %}
+  {% endfor %} {% else %}
+  <h2 align="center">No Invites</h2>
+  {% endif %}
 </ul>
 {% endblock %}
